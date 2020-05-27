@@ -1,0 +1,55 @@
+# Data ID 规则：{spring.application.name}-{spring.profiles.active}.yml
+nacos:
+#  server-addr: 192.168.245.130:8848
+  namespace: 02e9927a-1813-496f-82f4-d154080c712b
+  server-addr: 192.168.245.130:8848,192.168.245.130:8847,192.168.245.130:8846
+spring:
+  application:
+    # 与Data Id规则挂钩
+    name: nacos-config
+  cloud:
+    nacos:
+      discovery:
+        # nacos服务地址
+        server-addr: ${nacos.server-addr}
+        # 命名空间，可自己配置，配置时不填就由nacos自动分配。切换到自己创建的命名空间时这个参数必填，默认public可不填
+        # 服务列表命名空间
+        namespace: ${nacos.namespace}
+        # 配置服务id 不配置默认本机ip
+        service: myService
+        enabled: true
+      #        ip: 192.168.162.2
+      config:
+        # nacos服务地址
+        server-addr: ${nacos.server-addr}
+        # 配置文件后缀
+        file-extension: yml
+        # 组名称 不填默认为：DEFAULT_GROUP。 config下配置多个或者单个配置group参数必须要有。加载优先级最高，且最新加载得是jdbc链接
+        group: DEV_GROUP
+        # 命名空间，可自己配置，配置时不填就由nacos自动分配。切换到自己创建的命名空间时这个参数必填，默认public可不填
+        namespace: ${nacos.namespace}
+#        ext-config[0]:
+#          dataid: nacos-config-dev.yml
+#          group: DEV_GROUP
+        ext-config[0]:
+          dataid: nacos-config-test.yml
+          group: TEST_GROUP
+          refresh: true
+        enabled: true
+  profiles:
+    # 启动哪一个配置。相当于命名空间名称。
+    active: dev
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password:
+    timeout: 300
+    jedis:
+      pool:
+        max-idle: 100
+        max-wait:
+        min-idle: 1
+        max-active: 8
+  cache:
+    type: redis
